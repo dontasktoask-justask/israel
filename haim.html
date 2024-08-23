@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>איך לשאול שאלות בצ'אטים קהילתיים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #f4f7f9;
+            --text-color: #333333;
+            --highlight-color: #e74c3c;
+            --card-bg: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        body {
+            font-family: 'Heebo', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            transition: var(--transition);
+        }
+        body.dark-mode {
+            --background-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --card-bg: #2a2a2a;
+            --secondary-color: #b8c6db;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1, h2 {
+            font-family: 'Rubik', sans-serif;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 20px;
+            transition: opacity 0.3s ease;
+        }
+        h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 5px;
+            background: var(--primary-color);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        h1:hover::after {
+            width: 120px;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: var(--transition), transform 0.3s ease;
+            transform: translateY(0);
+        }
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .example {
+            border-right: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            background-color: rgba(74, 144, 226, 0.1);
+            border-radius: 10px;
+            transition: var(--transition), transform 0.3s ease;
+        }
+        .example:hover {
+            transform: translateX(-5px);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        }
+        .highlight {
+            color: var(--highlight-color);
+            font-weight: bold;
+        }
+        .summary {
+            background-color: rgba(74, 144, 226, 0.2);
+            border: 2px solid var(--primary-color);
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 15px;
+            transition: var(--transition), transform 0.3s ease;
+        }
+        .summary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .tip {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-right: 5px solid #2ecc71;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            transition: var(--transition), transform 0.3s ease;
+        }
+        .tip:hover {
+            transform: translateX(-5px);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        }
+        ul {
+            padding-right: 25px;
+        }
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+        .theme-switch input {
+            display: none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .slider-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            transition: .4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+        }
+        .sun-icon {
+            left: 6px;
+        }
+        .moon-icon {
+            right: 6px;
+            opacity: 0;
+        }
+        input:checked + .slider .sun-icon {
+            opacity: 0;
+        }
+        input:checked + .slider .moon-icon {
+            opacity: 1;
+        }
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: transparent;
+            z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider">
+                <span class="slider-icon sun-icon">☀️</span>
+                <span class="slider-icon moon-icon">🌙</span>
+            </div>
+        </label>
+    </div>
+    <div class="container">
+        <h1>איך לשאול שאלות בצ'אטים קהילתיים</h1>
+        
+        <div class="card">
+            <p>בקהילות מקוונות, האופן בו אנו שואלים שאלות משפיע מאוד על הסיכוי לקבל תשובות מועילות. הנה כמה טיפים שיעזרו לכם לקבל את העזרה שאתם צריכים.</p>
+        </div>
+
+        <h2>הימנעו מ"שאלה על שאלה"</h2>
+        
+        <div class="example">
+            <strong>לא מומלץ:</strong> יש פה מישהו שמבין ב-Stable Diffusion?
+        </div>
+        
+        <p>גישה זו פחות יעילה כי היא למעשה שואלת:</p>
+        
+        <div class="example">
+            <strong>תרגום חופשי:</strong> האם מישהו כאן מוכן להתחייב לעזור לי, בלי לדעת מה הבעיה?
+        </div>
+        
+        <h2>למה זה לא עובד?</h2>
+        
+        <div class="card">
+            <ul>
+                <li>מומחים עשויים להסס לענות מחשש להתחייבות לא ידועה.</li>
+                <li>זה מצמצם את מעגל העונים הפוטנציאליים.</li>
+                <li>זה נתפס כבקשה שאחרים יעשו את העבודה במקומכם.</li>
+            </ul>
+        </div>
+
+        <h2>הדרך המומלצת</h2>
+        
+        <div class="tip">
+            <strong>טיפ:</strong> תארו את הבעיה או השאלה שלכם ישירות.
+        </div>
+        
+        <p>במקום זאת, נסו משהו כזה:</p>
+        
+        <div class="example">
+            <strong>מומלץ:</strong> אני מנסה ליצור תמונת חתול בסגנון אנימה עם Stable Diffusion, אבל התוצאות לא מספיק "אנימציוניות". יש רעיונות לשיפור ה-prompt או המודל?
+        </div>
+        
+        <p>בצורה זו:</p>
+        <ul>
+            <li>אתם מתארים את המטרה שלכם.</li>
+            <li>אתם מציינים מה כבר ניסיתם.</li>
+            <li>אתם מכוונים לסוג העזרה שאתם מחפשים.</li>
+        </ul>
+
+        <div class="summary">
+            <h3>לסיכום</h3>
+            <p>במקום <span class="highlight">"מי יכול לעזור?"</span>, נסחו: <span class="highlight">"אני מנסה [פעולה] עם [כלי], אבל נתקלתי [בבעיה]. יש רעיונות ל[פתרון אפשרי]?"</span></p>
+        </div>
+        
+        <div class="tip">
+            <strong>זכרו:</strong> שאלות ממוקדות וברורות מגדילות את הסיכוי לקבל עזרה מועילה!
+        </div>
+    </div>
+
+    <script>
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const body = document.body;
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode');
+            }
+        }
+
+        toggleSwitch.addEventListener('change', switchTheme, false);
+
+        // Animate elements on scroll
+        const animateElements = document.querySelectorAll('.card, .example, .tip, .summary');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animateElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.progress-bar').style.width = scrolled + '%';
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add parallax effect to the header
+        const header = document.querySelector('h1');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                // גלילה למטה
+                header.style.opacity = '0.8';
+            } else {
+                // גלילה למעלה
+                header.style.opacity = '1';
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, false);
+    </script>
+</body>
+</html>
